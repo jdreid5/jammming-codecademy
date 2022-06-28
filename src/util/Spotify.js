@@ -1,5 +1,5 @@
 const clientID = "6f527d12432e49a0963fafac89af5a49";
-const redirectURI = "http://codecademy-jammming-jonreid.surge.sh/";
+const redirectURI = "https://codecademy-jammming-jonreid.surge.sh";
 let accessToken;
 
 export const Spotify = {
@@ -21,14 +21,14 @@ export const Spotify = {
       return accessToken;
 
     } else {
-      const accessURL = `https://accounts.spotify.com/authorize?client_id=${clientID}&response_type=token&scope=playlist-modify-public&redirect_uri=${redirectURI}/`;
+      const accessURL = `https://accounts.spotify.com/authorize?client_id=${clientID}&response_type=token&scope=playlist-modify-public&redirect_uri=${redirectURI}`;
       window.location = accessURL;
     }
   },
 
   search(searchTerm) {
     const accessToken = Spotify.getAccessToken();
-    return fetch(`https://api.spotify.com/v1/search?type=track&q=${searchTerm}/`, { headers: {Authorization: `Bearer ${accessToken}`} 
+    return fetch(`https://api.spotify.com/v1/search?type=track&q=${searchTerm}`, { headers: {Authorization: `Bearer ${accessToken}`} 
     }).then(response => {
       return response.json();
     }).then(jsonResponse => {
@@ -38,7 +38,7 @@ export const Spotify = {
       return jsonResponse.tracks.items.map(track => ({
         id: track.id,
         name: track.name,
-        artist: track.artist[0].name,
+        artist: track.artists[0].name,
         album: track.album.name,
         uri: track.uri
       }))
@@ -65,13 +65,13 @@ export const Spotify = {
       ).then(response => response.json()
       ).then(jsonResponse => {
         const playlistID = jsonResponse.id;
-        return fetch(`https://api.spotify.com/v1/users/${userID}/playlists/${playlistID}/tracks`, 
+        return fetch(`https://api.spotify.com/v1/playlists/${playlistID}/tracks`, 
           {
             headers: headers,
             method: 'POST',
             body: JSON.stringify({ uris: trackURIs })
           }
-        )
+        );
         })
       }
     )
